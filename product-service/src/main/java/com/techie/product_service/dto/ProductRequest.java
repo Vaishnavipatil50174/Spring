@@ -1,0 +1,16 @@
+package com.techie.product_service.dto;
+
+import lombok.*;
+
+import java.math.BigDecimal;
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+public class ProductRequest {
+    private String name;
+    private String description;
+    private BigDecimal price;
+}

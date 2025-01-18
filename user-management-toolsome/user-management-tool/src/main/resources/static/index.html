@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Management Tool</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<h1>User Management UI</h1>
+
+<!-- Create User form -->
+<h2>Create User</h2>
+<form id="createUserForm">
+    Name: <input type="text" id="name"><br>
+    Email: <input type="text" id="email"><br>
+    Gender: <select id="gender">
+    <option value="Male">Male</option>
+    <option value="Female">Female</option>
+</select><br>
+    <button type="button" onclick="createUser()">Create User</button>
+</form>
+
+<!-- Update User form -->
+<h2>Update User</h2>
+<form id="updateUserForm">
+    ID: <input type="number" id="updateId"><br>
+    Name: <input type="text" id="updateName"><br>
+    Email: <input type="text" id="updateEmail"><br>
+    Gender: <select id="updateGender">
+    <option value="Male">Male</option>
+    <option value="Female">Female</option>
+</select><br>
+    <button type="button" onclick="updateUser()">Update User</button>
+</form>
+
+<!-- Delete User form -->
+<h2>Delete User</h2>
+<form id="deleteUserForm">
+    ID: <input type="number" id="deleteId"><br>
+    <button type="button" onclick="deleteUser()">Delete User</button>
+</form>
+
+<!-- Get User By ID form -->
+<h2>Get User By ID</h2>
+<form id="getUserForm">
+    ID: <input type="number" id="getId"><br>
+    <button type="button" onclick="getUser()">Get User</button>
+</form>
+
+<!-- Get Users By Role form -->
+<h2>Get Users By Role</h2>
+<form id="getUserByRoleForm">
+    Role: <input type="text" id="role"><br>
+    <button type="button" onclick="getUsersByRole()">Get Users By Role</button>
+</form>
+
+<script>
+    function createUser() {
+        const userData = {
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            gender: document.getElementById('gender').value
+        };
+        axios.post('/users', userData)
+            .then(response => alert('User created!'))
+            .catch(error => alert('Failed to create user'));
+    }
+
+    function updateUser() {
+        const userData = {
+            id: document.getElementById('updateId').value,
+            name: document.getElementById('updateName').value,
+            email: document.getElementById('updateEmail').value,
+            gender: document.getElementById('updateGender').value
+        };
+        axios.put(`/users`, userData)
+            .then(response => alert('User updated!'))
+            .catch(error => alert('Failed to update user'));
+    }
+
+    function deleteUser() {
+        const userId = document.getElementById('deleteId').value;
+        axios.delete(`/users/${userId}`)
+            .then(response => alert('User deleted!'))
+            .catch(error => alert('Failed to delete user'));
+    }
+
+    function getUser() {
+        const userId = document.getElementById('getId').value;
+        axios.get(`/users/${userId}`)
+            .then(response => {
+                alert(JSON.stringify(response.data));
+            })
+            .catch(error => alert('Failed to fetch user'));
+    }
+
+    function getUsersByRole() {
+        const role = document.getElementById('role').value;
+        axios.get(`/users/role/userByRole`, {params: {role: role}})
+            .then(response => {
+                alert(JSON.stringify(response.data));
+            })
+            .catch(error => alert('Failed to fetch users by role'));
+    }
+</script>
+</body>
+</html>
