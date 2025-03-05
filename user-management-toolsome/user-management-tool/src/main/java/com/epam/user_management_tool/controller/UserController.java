@@ -44,7 +44,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public User getUserById(@PathVariable Integer userId) throws Throwable {
+    public User getUserById(@PathVariable Integer userId) throws  Throwable {
         return userService.getUserById(userId);
     }
 

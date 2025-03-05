@@ -9,7 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -41,18 +44,35 @@ public class ProductService {
     @Autowired
     ObjectMapper objectMapper;
 
-    public void createProduct(ProductRequest productRequest) {
+    public void createProduct(Product productRequest) {
         // Map ProductRequest to Product using ObjectMapper
-        Product product = this.objectMapper.convertValue(productRequest, Product.class);
-        productRepository.save(product);
+        //Product product = this.objectMapper.convertValue(productRequest, Product.class);
+        productRepository.save(productRequest);
     }
 
-    public List<ProductResponse> all() {
+    public List<Product> all() {
         // Map List<Product> to List<ProductResponse>
-        return productRepository.findAll().stream()
-                .map(product -> objectMapper.convertValue(product, ProductResponse.class))
-                .toList();
+        return productRepository.findAll();
     }
+    public Product searchById(Integer id){
+        return productRepository.findById(id).orElse(null);
+    }
+
+    public Product updateProductPartially(Integer id, Map<String,Object> updates){
+        Product product=productRepository.findById(id).orElse(null);
+
+        updates.forEach((k,v)->{
+            switch (k){
+                case "name" -> product.setName((String) v);
+                case "description" -> product.setDescription((String) v);
+                case "price" -> product.setPrice(BigDecimal.valueOf(Long.parseLong(v.toString())));
+                default -> throw new IllegalArgumentException("Invalid field" + k);
+            }
+        });
+        return productRepository.save(product);
+    }
+
+
 
 //    private ProductResponse mapToProductResponse(Product product) {
 //        return  ProductResponse.builder()
